@@ -9,21 +9,16 @@ class SettingsFieldset extends Fieldset
 {
     protected $label = 'Lock Edit'; // @translate
 
-    protected $elementGroups = [
-        'lock_edit' => 'Lock Edit', // @translate
-    ];
-
     public function init(): void
     {
         $this
             ->setAttribute('id', 'lock-edit')
-            ->setOption('element_groups', $this->elementGroups)
 
             ->add([
                 'name' => 'lockedit_disable',
                 'type' => Element\Checkbox::class,
                 'options' => [
-                    'element_group' => 'lock_edit',
+                    'element_group' => 'editing',
                     'label' => 'Disable content lock to allow concurrent editing', // @translate
                 ],
                 'attributes' => [
@@ -34,7 +29,7 @@ class SettingsFieldset extends Fieldset
                 'name' => 'lockedit_duration',
                 'type' => Element\Number::class,
                 'options' => [
-                    'element_group' => 'lock_edit',
+                    'element_group' => 'editing',
                     'label' => 'Number of seconds before automatic removing of the lock', // @translate
                 ],
                 'attributes' => [
