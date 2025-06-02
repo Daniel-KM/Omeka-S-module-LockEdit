@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace EasyAdmin\Entity;
+namespace LockEdit\Entity;
 
 use DateTime;
 use Omeka\Entity\AbstractEntity;

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace EasyAdmin\Job;
+namespace LockEdit\Job;
 
 class DbContentLock extends AbstractCheck
 {
