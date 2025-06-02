@@ -144,6 +144,18 @@ class Module extends AbstractModule
             [$this, 'contentLockingOnDelete']
         );
 
+        // Add a job to clear content locks.
+        $sharedEventManager->attach(
+            \EasyAdmin\Form\CheckAndFixForm::class,
+            'form.add_elements',
+            [$this, 'handleEasyAdminJobsForm']
+        );
+        $sharedEventManager->attach(
+            \EasyAdmin\Controller\Admin\CheckAndFixController::class,
+            'easyadmin.job',
+            [$this, 'handleEasyAdminJobs']
+        );
+
         $sharedEventManager->attach(
             \Omeka\Form\SettingForm::class,
             'form.add_elements',
@@ -599,6 +611,70 @@ class Module extends AbstractModule
         // Throw exception for frontend and backend.
         // TODO Redirect to browse or show view instead of displaying the error.
         throw new \Omeka\Api\Exception\ValidationException((string) $message);
+    }
+
+    public function handleEasyAdminJobsForm(Event $event): void
+    {
+        /**
+         * @var \EasyAdmin\Form\CheckAndFixForm $form
+         * @var \Laminas\Form\Element\Radio $process
+         */
+        $form = $event->getTarget();
+        $fieldset = $form->get('module_tasks');
+
+        $process = $fieldset->get('process');
+        $valueOptions = $process->getValueOptions();
+        $valueOptions['lockedit_db_content_lock_check'] = 'Lock Edit: Check existing content locks'; // @translate
+        $valueOptions['lockedit_db_content_lock_clean'] = 'Lock Edit: Remove existing content locks'; // @translate
+        $process->setValueOptions($valueOptions);
+
+        $fieldset
+            ->add([
+                'type' => \Laminas\Form\Fieldset::class,
+                'name' => 'lockedit_db_content_lock',
+                'options' => [
+                    'label' => 'Options to remove content locks', // @translate
+                ],
+                'attributes' => [
+                    'class' => 'lockedit_db_content_lock_check lockedit_db_content_lock_clean',
+                ],
+            ])
+            ->get('lockedit_db_content_lock')
+            ->add([
+                'name' => 'hours',
+                'type' => \Common\Form\Element\OptionalNumber::class,
+                'options' => [
+                    'label' => 'Older than this number of hours', // @translate
+                ],
+                'attributes' => [
+                    'id' => 'lockedit_db_content_lock-hours',
+                ],
+            ])
+            ->add([
+                'name' => 'user_id',
+                'type' => \Common\Form\Element\OptionalUserSelect::class,
+                'options' => [
+                    'label' => 'Belonging to these users', // @translate
+                    'empty_option' => '',
+                ],
+                'attributes' => [
+                    'id' => 'lockedit_db_content_lock-user_id',
+                    'multiple' => true,
+                    'required' => false,
+                    'class' => 'chosen-select',
+                    'data-placeholder' => 'Select users…', // @translate
+                ],
+            ]);
+    }
+
+    public function handleEasyAdminJobs(Event $event): void
+    {
+        $process = $event->getParam('process');
+        if ($process === 'lockedit_db_content_lock_check' || $process === 'lockedit_db_content_lock_clean') {
+            $params = $event->getParam('params');
+            $event->setParam('job', \LockEdit\Job\DbContentLock::class);
+            $event->setParam('args', ['process' => $process] + ($params['module_tasks']['lockedit_db_content_lock'] ?? []));
+        }
     }
 
     protected function removeExpiredContentLocks(): void

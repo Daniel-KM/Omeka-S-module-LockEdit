@@ -2,6 +2,8 @@
 
 namespace LockEdit\Job;
 
+use EasyAdmin\Job\AbstractCheck;
+
 class DbContentLock extends AbstractCheck
 {
     /**
@@ -14,7 +16,7 @@ class DbContentLock extends AbstractCheck
         parent::perform();
 
         $process = $this->getArg('process');
-        $processFix = $process === 'db_content_lock_clean';
+        $processFix = $process === 'lockedit_db_content_lock_clean';
 
         $minimumHours = (string) $this->getArg('hours');
         if (strlen($minimumHours) && !is_numeric($minimumHours)) {
