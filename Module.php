@@ -61,11 +61,23 @@ class Module extends AbstractModule
     {
         $services = $this->getServiceLocator();
         $translate = $services->get('ControllerPluginManager')->get('translate');
+        $translator = $services->get('MvcTranslator');
 
         if (!method_exists($this, 'checkModuleActiveVersion') || !$this->checkModuleActiveVersion('Common', '3.4.67')) {
             $message = new \Omeka\Stdlib\Message(
                 $translate('The module %1$s should be upgraded to version %2$s or later.'), // @translate
                 'Common', '3.4.67'
+            );
+            throw new \Omeka\Module\Exception\ModuleCannotInstallException((string) $message);
+        }
+
+        // If present, EasyAdmin should be at least 3.4.31.
+        if ($this->isModuleActive('EasyAdmin')
+            && !$this->checkModuleActiveVersion('EasyAdmin', '3.4.31')
+        ) {
+            $message = new PsrMessage(
+                $translator->translate('The module {module} is installed. For compatibility with this module, upgrade it first to version {version} or greater.'), // @translate
+                ['module' => 'Easy Admin', 'version' => '3.4.31']
             );
             throw new \Omeka\Module\Exception\ModuleCannotInstallException((string) $message);
         }
