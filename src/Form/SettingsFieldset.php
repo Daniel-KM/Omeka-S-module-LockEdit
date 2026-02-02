@@ -12,7 +12,7 @@ class SettingsFieldset extends Fieldset
     public function init(): void
     {
         $this
-            ->setAttribute('id', 'lock-edit')
+            ->setAttribute('id', 'lock-edit-fieldset')
 
             ->add([
                 'name' => 'lockedit_disable',
