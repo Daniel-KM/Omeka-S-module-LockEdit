@@ -444,7 +444,7 @@ class Module extends AbstractModule
          */
         $services = $this->getServiceLocator();
         $settings = $services->get('Omeka\Settings');
-        if (!$settings->get('lockedit_disable')) {
+        if ($settings->get('lockedit_disable')) {
             return;
         }
 
