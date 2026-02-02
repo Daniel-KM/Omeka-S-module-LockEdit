@@ -1,26 +1,33 @@
 {
     "name": "daniel-km/omeka-s-module-lock-edit",
-    "description": "Module for Omeka S that warns automatically when another user edits a resource to avoid concurrent edition.",
-    "type": "library",
+    "type": "omeka-s-module",
+    "description": "Module for Omeka S: Automatically warn when another user edits a resource to avoid concurrent edition.",
+    "keywords": [
+        "Omeka S",
+        "Omeka S module",
+        "administration",
+        "curation"
+    ],
     "license": "CECILL-2.1",
+    "homepage": "https://gitlab.com/Daniel-KM/Omeka-S-module-LockEdit",
     "authors": [
         {
             "name": "Daniel Berthereau",
             "email": "Daniel.packagist@Berthereau.net"
         }
     ],
-    "homepage": "https://gitlab.com/Daniel-KM/Omeka-S-module-LockEdit",
     "support": {
         "issues": "https://gitlab.com/Daniel-KM/Omeka-S-module-LockEdit/-/issues",
         "forum": "https://forum.omeka.org/"
     },
-    "keywords": [
-        "Omeka S",
-        "module",
-        "admin",
-        "install",
-        "curation"
-    ],
+    "_require (not set until Omeka S merges PR #2412)": {
+        "omeka/omeka-s-core": "^4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "LockEdit\\": "src/"
+        }
+    },
     "autoload-dev": {
         "psr-4": {
             "LockEditTest\\": "tests/LockEditTest/"
