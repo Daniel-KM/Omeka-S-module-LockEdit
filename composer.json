@@ -21,12 +21,9 @@
         "install",
         "curation"
     ],
-    "require-dev": {
-        "biblibre/omeka-s-test-helper": "dev-master"
-    },
     "autoload-dev": {
         "psr-4": {
-            "LockEditTest\\": "test/LockEditTest/"
+            "LockEditTest\\": "tests/LockEditTest/"
         }
     }
 }
