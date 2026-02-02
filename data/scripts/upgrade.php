@@ -41,3 +41,21 @@ if (!method_exists($this, 'checkModuleActiveVersion') || !$this->checkModuleActi
     );
     throw new \Omeka\Module\Exception\ModuleCannotInstallException((string) $message);
 }
+
+if (version_compare((string) $oldVersion, '3.4.2', '<')) {
+    // Fix inverted logic for setting "lockedit_disable".
+    // In previous versions, the logic was inverted: "lockedit_disable = false"
+    // meant locking was disabled, and "true" meant enabled.
+    // Now the logic is correct: "lockedit_disable = true" disables locking.
+    // To preserve existing behavior, invert the current value.
+    $currentValue = $settings->get('lockedit_disable');
+    if ($currentValue !== null) {
+        $newValue = !$currentValue;
+        $settings->set('lockedit_disable', $newValue);
+        $message = new PsrMessage(
+            'The setting "Disable content locking" had inverted logic in previous versions and has been fixed. The value has been automatically inverted to preserve your existing behavior. Please verify the setting in module configuration.' // @translate
+        );
+        $messenger->addWarning($message);
+        $logger->warn($message->getMessage());
+    }
+}

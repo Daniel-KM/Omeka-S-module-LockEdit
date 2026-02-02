@@ -97,7 +97,7 @@ of the CeCILL license and that you accept its terms.
 Copyright
 ---------
 
-* Copyright Daniel Berthereau, 2022-2025 (see [Daniel-KM] on GitLab)
+* Copyright Daniel Berthereau, 2022-2026 (see [Daniel-KM] on GitLab)
 
 This module was initially implemented in module [Easy Admin] and built for the
 digital library [Numistral].
